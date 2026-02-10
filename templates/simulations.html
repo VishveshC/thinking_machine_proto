@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}Fraud Detection Simulations - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4 fade-in">
+    <div class="col-12">
+        <h1><i class="fas fa-flask me-3"></i>Fraud Detection Simulations</h1>
+        <p class="text-muted">Test our AI-powered fraud detection system with different scenarios</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Simulation Form -->
+    <div class="col-md-5 mb-4">
+        <div class="card">
+            <div class="card-header" style="background: #0ce39c; color: white; border-radius: 0.75rem 0.75rem 0 0;">
+                <h5 class="mb-0"><i class="fas fa-play-circle me-2"></i>Run New Simulation</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('run_simulation') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-4">
+                        <label class="form-label">{{ form.data_type.label.text }}</label>
+                        <input type="hidden" name="data_type" id="data_type" value="email">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary data-type-btn active" data-type="email"
+                                onclick="selectDataType('email')">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary data-type-btn" data-type="sms"
+                                onclick="selectDataType('sms')">
+                                <i class="fas fa-sms"></i>
+                                <span>SMS</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary data-type-btn" data-type="phone"
+                                onclick="selectDataType('phone')">
+                                <i class="fas fa-phone"></i>
+                                <span>Phone</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.sender_name.label(class='form-label') }}
+                        {{ form.sender_name(class='form-control') }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.receiver_name.label(class='form-label') }}
+                        {{ form.receiver_name(class='form-control') }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.input_data.label(class='form-label') }}
+                        {{ form.input_data(class='form-control', rows='6', style='resize: none;') }}
+                        <div class="form-text">Enter the content you want to analyze for fraud</div>
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class='btn btn-primary btn-lg') }}
+                    </div>
+                </form>
+
+                <!-- Example Scenarios -->
+                <div class="mt-4">
+                    <h6>Example Scenarios:</h6>
+                    <div class="accordion accordion-flush" id="examplesAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed small" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#example1">
+                                    Phishing Email
+                                </button>
+                            </h2>
+                            <div id="example1" class="accordion-collapse collapse" data-bs-parent="#examplesAccordion">
+                                <div class="accordion-body small">
+                                    <code>URGENT: Your account has been suspended! Click here immediately to verify your identity or we will close your account within 24 hours. http://suspicious-link.com</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed small" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#example2">
+                                    Legitimate SMS
+                                </button>
+                            </h2>
+                            <div id="example2" class="accordion-collapse collapse" data-bs-parent="#examplesAccordion">
+                                <div class="accordion-body small">
+                                    <code>Hi! Just confirming our meeting tomorrow at 2 PM. See you then!</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulation Results -->
+    <div class="col-md-7 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Simulation Results</h5>
+            </div>
+            <div class="card-body">
+                {% if simulation_result %}
+                <!-- Fraud Score -->
+                <div class="text-center mb-4">
+                    <div
+                        class="display-4 {% if simulation_result.is_fraud %}text-danger{% else %}text-success{% endif %}">
+                        {{ "%.0f"|format(simulation_result.score * 100) }}%
+                    </div>
+                    <div class="text-muted">Fraud Probability</div>
+                    <span class="badge bg-{{ 'danger' if simulation_result.is_fraud else 'success' }} mt-2">
+                        {% if simulation_result.is_fraud %}FRAUD DETECTED{% else %}LEGITIMATE{% endif %}
+                    </span>
+                </div>
+
+                <!-- Analysis Details -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <strong>Analysis Details</strong>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Severity:</strong>
+                            <span
+                                class="badge bg-{{ 'danger' if simulation_result.severity == 'high' else 'warning' if simulation_result.severity == 'medium' else 'info' }}">
+                                {{ simulation_result.severity|upper }}
+                            </span>
+                        </p>
+                        <p><strong>Explanation:</strong> {{ simulation_result.reason }}</p>
+
+                        {% if simulation_result.patterns %}
+                        <p><strong>Fraud Indicators:</strong></p>
+                        <ul>
+                            {% for pattern in simulation_result.patterns %}
+                            <li class="text-danger">{{ pattern }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Conversation Log -->
+                {% if conversation %}
+                <div class="card">
+                    <div class="card-header">
+                        <strong><i class="fas fa-comments me-2"></i>Simulated Conversation</strong>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="chat-container">
+                            {% for msg in conversation %}
+                            <div class="chat-message {{ 'sender' if loop.index % 2 == 1 else 'receiver' }}">
+                                <div class="fw-bold small">{{ msg.speaker }}</div>
+                                <div>{{ msg.message }}</div>
+                                <div class="chat-timestamp">{{ msg.timestamp }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-flask fa-3x mb-3"></i>
+                    <p>Run a simulation to see results here</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Previous Simulations -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Your Simulation History</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if simulation_history %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Result</th>
+                                <th>Score</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sim in simulation_history %}
+                            <tr>
+                                <td>{{ sim.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td><span class="badge bg-secondary">{{ sim.simulation_type }}</span></td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if sim.fraud_detected else 'success' }}">
+                                        {{ 'Fraud' if sim.fraud_detected else 'Safe' }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.0f"|format(sim.fraud_score * 100) }}%</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary"
+                                        onclick="viewSimulation({{ sim.id }})">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center text-muted py-4">No simulation history yet. Run your first simulation above!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function viewSimulation(simId) {
+        // In a real implementation, this would fetch and display the simulation details
+        alert('Viewing simulation #' + simId);
+    }
+
+    // Auto-fill example on data type change
+    document.querySelector('select[name="data_type"]').addEventListener('change', function () {
+        const examples = {
+            'email': 'Subject: Verify Your Account\n\nDear user,\n\nYour account will be suspended unless you verify your identity immediately...',
+            'sms': 'CONGRATULATIONS! You have won ₹5000! Click this link to claim: http://bit.ly/fake',
+            'phone': '+1-800-SCAMMER with context: Robocall claiming to be from IRS demanding immediate payment'
+        };
+
+        const textarea = document.querySelector('textarea[name="input_data"]');
+        if (textarea.value === '') {
+            // Don't overwrite if user has started typing
+            textarea.placeholder = examples[this.value] || 'Enter content to analyze...';
+        }
+    });
+</script>
+{% endblock %}

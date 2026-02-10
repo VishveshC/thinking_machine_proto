@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-envelope me-2"></i>Contact Us</h1>
+        <p class="lead">Get in touch with our support team</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-body p-4">
+                {% if success %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Message sent successfully!</strong> We'll get back to you within 24 hours.
+                </div>
+                {% else %}
+                <form method="POST" action="{{ url_for('contact') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.name.label(class='form-label') }}
+                            {{ form.name }}
+                            {% for error in form.name.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.email.label(class='form-label') }}
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.subject.label(class='form-label') }}
+                        {{ form.subject }}
+                        {% for error in form.subject.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.message.label(class='form-label') }}
+                        {{ form.message }}
+                        <div class="form-text">Please provide as much detail as possible</div>
+                        {% for error in form.message.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    {{ form.submit(class='btn btn-primary btn-lg') }}
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Additional Contact Information -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+                        <h6>Email Support</h6>
+                        <p class="small text-muted">support@fraudguard.com</p>
+                        <p class="small">Response within 24 hours</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-clock fa-2x text-success mb-3"></i>
+                        <h6>Support Hours</h6>
+                        <p class="small text-muted">24/7 for Enterprise</p>
+                        <p class="small">Mon-Fri 9 AM - 6 PM EST</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-book fa-2x text-info mb-3"></i>
+                        <h6>Documentation</h6>
+                        <p class="small text-muted">Self-service resources</p>
+                        <a href="{{ url_for('user_guide') }}" class="small">View User Guide</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

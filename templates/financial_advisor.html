@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+
+{% block title %}AI Financial Advisor - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="chatbot-container">
+                <!-- Chatbot Header -->
+                <div class="chatbot-header">
+                    <div class="chatbot-header-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chatbot-header-info">
+                        <h3>AI Financial Advisor</h3>
+                        <p>Get personalized financial advice powered by AI</p>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div class="chatbot-messages" id="chatMessages">
+                    <!-- Empty State -->
+                    <div class="chatbot-empty-state" id="emptyState">
+                        <div class="chatbot-empty-icon">
+                            <i class="fas fa-comments-dollar"></i>
+                        </div>
+                        <h4>Start a Conversation</h4>
+                        <p>Ask me anything about budgeting, investments, savings, or financial planning. I'm here to
+                            help!</p>
+
+                        <div class="chatbot-suggestions">
+                            <div class="suggestion-chip" onclick="sendSuggestion('How can I improve my credit score?')">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Improve credit score
+                            </div>
+                            <div class="suggestion-chip"
+                                onclick="sendSuggestion('What are some good investment strategies?')">
+                                <i class="fas fa-chart-line me-2"></i>
+                                Investment strategies
+                            </div>
+                            <div class="suggestion-chip" onclick="sendSuggestion('Help me create a monthly budget')">
+                                <i class="fas fa-wallet me-2"></i>
+                                Create a budget
+                            </div>
+                            <div class="suggestion-chip"
+                                onclick="sendSuggestion('What should I do with my emergency fund?')">
+                                <i class="fas fa-piggy-bank me-2"></i>
+                                Emergency fund tips
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chatbot-input-area">
+                    <div class="chatbot-input-wrapper">
+                        <div class="chatbot-input-group">
+                            <textarea class="chatbot-textarea" id="userInput"
+                                placeholder="Type your financial question here..." rows="1"></textarea>
+                            <button class="voice-input-btn" id="voiceBtn" title="Voice input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                        <button class="chatbot-send-btn" id="sendBtn" onclick="sendMessage()">
+                            <span>Send</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="chatbot-disclaimer">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Disclaimer:</strong> This AI assistant provides general financial information only.
+                    It is not a substitute for professional financial advice. Always consult a certified financial
+                    advisor for personalized guidance.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global variables
+    let isRecording = false;
+    let recognition = null;
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+    let conversationHistory = [];
+
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatInlineMarkdown(text) {
+        let escaped = escapeHtml(text);
+        escaped = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        return escaped;
+    }
+
+    function renderMarkdownSafe(text) {
+        const lines = text.split(/\r?\n/);
+        const htmlParts = [];
+        let listOpen = false;
+
+        const closeList = () => {
+            if (listOpen) {
+                htmlParts.push('</ul>');
+                listOpen = false;
+            }
+        };
+
+        lines.forEach(rawLine => {
+            const trimmed = rawLine.trim();
+
+            if (!trimmed) {
+                closeList();
+                return;
+            }
+
+            if (trimmed.startsWith('- ')) {
+                if (!listOpen) {
+                    htmlParts.push('<ul>');
+                    listOpen = true;
+                }
+                const itemContent = trimmed.substring(2);
+                htmlParts.push(`<li>${formatInlineMarkdown(itemContent)}</li>`);
+            } else {
+                closeList();
+                htmlParts.push(`<p>${formatInlineMarkdown(rawLine)}</p>`);
+            }
+        });
+
+        closeList();
+        return htmlParts.join('');
+    }
+
+    // Initialize Speech Recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('userInput').value = transcript;
+            stopRecording();
+            // Auto-send after speech recognition
+            setTimeout(() => sendMessage(), 500);
+        };
+
+        recognition.onerror = function (event) {
+            console.error('Speech recognition error:', event.error);
+            stopRecording();
+            showError('Voice recognition failed. Please try again.');
+        };
+
+        recognition.onend = function () {
+            stopRecording();
+        };
+    } else {
+        // Hide voice button if not supported
+        document.getElementById('voiceBtn').style.display = 'none';
+    }
+
+    // Auto-resize textarea
+    const textarea = document.getElementById('userInput');
+    textarea.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Handle Enter key (Shift+Enter for new line, Enter to send)
+    textarea.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Voice input button
+    document.getElementById('voiceBtn').addEventListener('click', toggleRecording);
+
+    function toggleRecording() {
+        if (!recognition) {
+            showError('Voice input is not supported in your browser.');
+            return;
+        }
+
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    }
+
+    function startRecording() {
+        isRecording = true;
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.add('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-stop-circle"></i>';
+        voiceBtn.title = 'Stop recording';
+
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error('Error starting recognition:', error);
+            stopRecording();
+        }
+    }
+
+    function stopRecording() {
+        isRecording = false;
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.remove('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        voiceBtn.title = 'Voice input';
+
+        if (recognition) {
+            try {
+                recognition.stop();
+            } catch (error) {
+                console.error('Error stopping recognition:', error);
+            }
+        }
+    }
+
+    // Send suggestion
+    function sendSuggestion(text) {
+        document.getElementById('userInput').value = text;
+        sendMessage();
+    }
+
+    // Send message
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Hide empty state
+        const emptyState = document.getElementById('emptyState');
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+
+        // Add user message
+        addMessage(message, 'user');
+        conversationHistory.push({ role: 'user', content: message });
+
+        // Clear input
+        input.value = '';
+        input.style.height = 'auto';
+
+        // Disable send button
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.disabled = true;
+
+        // Show typing indicator
+        addTypingIndicator();
+
+        try {
+            // Send to backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: message,
+                    history: conversationHistory.slice(-10) // Last 10 messages for context
+                })
+            });
+
+            const data = await response.json();
+
+            // Remove typing indicator
+            removeTypingIndicator();
+
+            if (data.success) {
+                // Add bot response
+                addMessage(data.response, 'bot', data.youtube_video);
+                conversationHistory.push({ role: 'assistant', content: data.response });
+
+                // Auto-play TTS if enabled
+                speakText(data.response);
+            } else {
+                showError(data.error || 'Failed to get response');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            removeTypingIndicator();
+            showError('Failed to connect to the AI advisor. Please try again.');
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    // Add message to chat
+    function addMessage(text, sender, youtubeVideo = null) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = `chat-message-wrapper ${sender}`;
+
+        const timestamp = new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+        const avatarIcon = sender === 'bot' ? 'fa-robot' : 'fa-user';
+        const formattedMessage = renderMarkdownSafe(text);
+
+        let youtubeHTML = '';
+        if (youtubeVideo && sender === 'bot') {
+            youtubeHTML = `
+            <div class="youtube-recommendation">
+                <img src="${youtubeVideo.thumbnail}" alt="${youtubeVideo.title}" class="youtube-thumbnail">
+                <div class="youtube-info">
+                    <div class="youtube-title">${youtubeVideo.title}</div>
+                    <a href="${youtubeVideo.url}" target="_blank" class="youtube-link">
+                        <i class="fab fa-youtube"></i>
+                        Watch on YouTube
+                    </a>
+                </div>
+            </div>
+        `;
+        }
+
+        const actionsHTML = sender === 'bot' ? `
+        <div class="chat-actions">
+            <button class="chat-action-btn" onclick="speakMessage(this)" data-text="${text.replace(/"/g, '&quot;')}">
+                <i class="fas fa-volume-up"></i>
+                <span>Listen</span>
+            </button>
+            <button class="chat-action-btn" onclick="copyMessage(this)" data-text="${text.replace(/"/g, '&quot;')}">
+                <i class="fas fa-copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+    ` : '';
+
+        messageWrapper.innerHTML = `
+        <div class="chat-avatar ${sender}">
+            <i class="fas ${avatarIcon}"></i>
+        </div>
+        <div class="chat-message-content">
+            <div class="chat-bubble ${sender}">
+                ${formattedMessage}
+            </div>
+            ${actionsHTML}
+            ${youtubeHTML}
+            <div class="chat-timestamp">${timestamp}</div>
+        </div>
+    `;
+
+        messagesContainer.appendChild(messageWrapper);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Add typing indicator
+    function addTypingIndicator() {
+        const messagesContainer = document.getElementById('chatMessages');
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'chat-message-wrapper bot';
+        typingIndicator.id = 'typingIndicator';
+
+        typingIndicator.innerHTML = `
+        <div class="chat-avatar bot">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="chat-message-content">
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+    `;
+
+        messagesContainer.appendChild(typingIndicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Remove typing indicator
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+
+    // Text-to-speech function
+    function speakText(text) {
+        // Stop any ongoing speech
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+
+        // Don't auto-play, let user click listen button
+        return;
+    }
+
+    function speakMessage(button) {
+        const text = button.getAttribute('data-text');
+
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            button.innerHTML = '<i class="fas fa-volume-up"></i><span>Listen</span>';
+            return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        utterance.onstart = function () {
+            button.innerHTML = '<i class="fas fa-stop"></i><span>Stop</span>';
+        };
+
+        utterance.onend = function () {
+            button.innerHTML = '<i class="fas fa-volume-up"></i><span>Listen</span>';
+        };
+
+        utterance.onerror = function () {
+            button.innerHTML = '<i class="fas fa-volume-up"></i><span>Listen</span>';
+            showError('Text-to-speech failed');
+        };
+
+        speechSynthesis.speak(utterance);
+    }
+
+    // Copy message
+    function copyMessage(button) {
+        const text = button.getAttribute('data-text');
+        navigator.clipboard.writeText(text).then(() => {
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+            }, 2000);
+        }).catch(err => {
+            showError('Failed to copy message');
+        });
+    }
+
+    // Show error
+    function showError(message) {
+        // You can implement a toast notification here
+        alert(message);
+    }
+</script>
+
+<style>
+    /* Additional mobile responsiveness for chatbot */
+    @media (max-width: 768px) {
+        .chatbot-container {
+            height: calc(100vh - 150px);
+        }
+
+        .chat-message-content {
+            max-width: 85%;
+        }
+
+        .chatbot-suggestions {
+            grid-template-columns: 1fr;
+        }
+
+        .chatbot-input-wrapper {
+            flex-direction: column;
+        }
+
+        .chatbot-send-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}

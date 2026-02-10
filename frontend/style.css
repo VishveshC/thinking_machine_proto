@@ -1,0 +1,163 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #1976d2;
+    color: white;
+}
+
+header input {
+    width: 40%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+}
+
+.profile-icon {
+    font-size: 1.5rem;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #fff;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 1rem;
+}
+
+.sidebar li {
+    padding: 0.75rem;
+    cursor: pointer;
+}
+
+.sidebar li.active,
+.sidebar li:hover {
+    background-color: #e3f2fd;
+    font-weight: bold;
+}
+
+.badge {
+    background-color: #d32f2f;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-left: 6px;
+}
+
+main {
+    display: flex;
+    flex: 1;
+}
+
+.threads {
+    width: 300px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.thread {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.thread:hover {
+    background-color: #f0f0f0;
+}
+
+.conversation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+.conversation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 1rem;
+    max-width: 70%;
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.message.sent {
+    background-color: #e3f2fd;
+    align-self: flex-end;
+}
+
+.message.received {
+    background-color: #eeeeee;
+    align-self: flex-start;
+}
+
+.reply-box {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid #ccc;
+}
+
+.reply-box input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.reply-box button {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.new-message-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}

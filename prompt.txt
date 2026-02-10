@@ -1,0 +1,63 @@
+1. make 5 pages for - dashboard, api documentation, user guide, faq, simulations, contact us (in footer for each page). each page should have a header, footer, and main content area; use consistent styling across all pages. Make it minimistic and user-friendly.
+2. ensure all text is easy to read and understand; use clear headings and bullet points where appropriate.
+3. the api we are making is for a fraud detection system that uses machine learning to identify suspicious transactions, but for demo purposes, we'll be using a gemini api to simulate the fraud detection process. So all in all, our api is a gemini api wrapper with additional features for fraud detection.
+4. the api will have endpoints for user authentication, transaction submission, fraud detection results retrieval and tokenization. Document each endpoint with request/response examples and error handling. api should follow RESTful principles. api should have selection for different content for analysing such as emails, sms and phone numbers. ie, users can choose what type of data they want to analyze for fraud detection. api should maintain a seperate database for known fraud patterns that can be updated regularly to improve detection accuracy with the help of machine learning models, later, but for now, we can keep it simple with a static list of fraud patterns and add in known fraud patterns returned by gemini api.
+5. to login to our app, we should have 2FA (two-factor authentication) enabled for enhanced security. Create a login page that prompts users for their username, password, and a 2FA with google authenticator app.
+6. api documentation should include sections for authentication, endpoints, request/response examples, error handling, and usage guidelines.
+7. user guide should provide step-by-step instructions on how to set up and use the fraud detection API, including how to integrate it into existing systems.
+8. faq should address common questions about the fraud detection API, its features, pricing, and support.
+9. the system should consist of a money system where users can send funds to each other, and each transaction will be analyzed for fraud using the gemini api wrapper. if a transaction is flagged as suspicious, it will be held for review before completion.
+10. the webpage should have a dummy money balance for every user which will be displayed on the dashboard and be used for transactions.
+11. while paying, users should use their face to authorize the transaction for added security. Create a simple face recognition prompt during the payment process; dummy implementation is acceptable for demo purposes. before paying, the system should check paying amount against the user's dummy money balance and only allow the transaction if sufficient funds are available and also if the amount is considerablely large ( say some % of their total balance), then it should trigger an additional ai based fraud check + confirmation step and should be visible on the dashboard as well and to the user.
+12. the simulation page should allow users to simulate transactions and see how the fraud detection system responds. Include options to input different types of data (emails, SMS, phone numbers) and view the results of the fraud analysis. The simulation should have a user-friendly interface with clear instructions and chat logs for each simulation session, for example, it should 'simulate' a conversation between the 2 users involved in the transaction and keep the log of that conversation in a db maybe.
+13. the dashboard should provide an overview of the user's account, including their dummy money balance, recent transactions, and any flagged suspicious activities, also provide with a personalized financial insights. 
+14. ofc, all the simulations should use our api to demonstrate its capabilities.
+15. contact us page should have a simple form for users to reach out with questions or support requests, including fields for name, email, subject, and message. Include a submit button that sends the information to a designated support email address.
+
+
+
+
+
+
+add in a graph of account balance vs time on the dashboard as well WITH projection of the next few months or days maybe. (intelligently compute the projection with a linear regression dummy model). add in a quick investment tracker as well on the dashboard that shows dummy investments and their performance over time.
+after enabling 2fa, and logging in the second time, it does not show where to enter the 2fa code. fix that.
+enable the webcam and show a small window to scan the face for face recognition while paying and a dummy implementation of face recognition that always returns true for demo purposes.
+add in a section on the dashboard that shows users credit score (dummy values) and ways to improve it, generated with the help of gemini api.
+add in a dark theme toggle for the entire website.
+make the 2fa setup page more user friendly with qr code for google authenticator app and properly aligned elements.
+in simulations page, instead of a dropdown for selecting data type (email, sms, phone number), make it more interactive with icons or buttons.
+add in a section on the faq page that addresses common security concerns related to fraud detection and how our api addresses them.
+add functionality to the contact us form to actually store the messages in a database table for support team to review later.
+also, it seems the gemini api does NOT work at all with a valid key. Check the config and app files to ensure the gemini api is being called correctly and troubleshoot any issues preventing it from functioning as expected.
+change the font colour of account balance in the dashboard to white maybe cause its blending with the background.
+Rest, EXCELLENT WORK! execute all the requests mentioned above carefully, take your time and dont break anything :)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+add a completely new section to our product; we have to make a AI powered financial advisor chatbot that can provide users with personalized financial advice based on their transaction history and spending patterns. The chatbot should be accessible from the dashboard and should use the gemini api to generate responses. It should be able to answer common financial questions, provide budgeting tips, and suggest investment opportunities. The chatbot interface should be user-friendly, with a simple text input field and a chat log displaying the conversation history. Ensure that the chatbot maintains user privacy and does not store any sensitive financial information.
+we need to power this ai chatbot with the gemini api, so ensure that the integration is seamless and that the chatbot can effectively utilize the capabilities of the gemini api to provide accurate and relevant financial advice.
+We also need to update the api documentation to include information about the new financial advisor chatbot feature, including how it works, the types of questions it can answer, and any limitations or disclaimers regarding the advice provided.
+we also need to give this ai chatbot a voice; implement text-to-speech functionality so that the chatbot can read out its responses to users. Use a suitable text-to-speech library to convert the chatbot's text responses into audio, and provide a play button in the chat interface for users to listen to the responses. Ensure that the audio quality is clear and that the text-to-speech feature enhances the overall user experience without being intrusive.
+we also need to add a voice to text feature so that users can speak their questions to the chatbot instead of typing them. Implement speech-to-text functionality using a reliable library or API to convert spoken input into text that the chatbot can understand. Add a microphone button in the chat interface that users can click to start and stop recording their voice input. Ensure that the speech-to-text feature is accurate and responsive, providing a smooth and intuitive experience for users who prefer to interact with the chatbot using their voice.
+this will in short make our financial advisor chatbot a fully voice-enabled ai assistant, enhancing accessibility and user engagement. IF POSSIBLE try to finish recording when the speaker stops speaking instead of requiring the user to manually stop the recording, and then generate the response from the chatbot based on the transcribed text and read it out using text to speech.
+also, the chatbot needs to recommend a youtube video related to personal finance or investment based on the user's query or the context of the conversation. Integrate a feature that searches for relevant YouTube videos using the YouTube Data API and retrieves a suitable video link. Display the recommended video in the chat interface, allowing users to click on the link to watch it. Ensure that the video recommendations are relevant and add value to the user's financial knowledge.

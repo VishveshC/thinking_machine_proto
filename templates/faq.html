@@ -1,0 +1,521 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-info-circle me-2"></i>Frequently Asked Questions</h1>
+        <p class="lead">Common questions about FraudGuard API</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <!-- General Questions -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">General Questions</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="generalAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#general1">
+                                What is FraudGuard?
+                            </button>
+                        </h2>
+                        <div id="general1" class="accordion-collapse collapse show" data-bs-parent="#generalAccordion">
+                            <div class="accordion-body">
+                                FraudGuard is an AI-powered fraud detection API that uses machine learning to identify
+                                suspicious transactions,
+                                emails, SMS messages, and phone numbers. It's designed to protect your applications and
+                                users from fraud.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#general2">
+                                How does fraud detection work?
+                            </button>
+                        </h2>
+                        <div id="general2" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+                            <div class="accordion-body">
+                                Our system uses Google's Gemini AI to analyze content patterns, combined with a
+                                continuously updated database
+                                of known fraud patterns. The AI examines multiple factors including language patterns,
+                                urgency indicators,
+                                suspicious links, and behavioral anomalies to calculate a fraud risk score.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#general3">
+                                What types of data can be analyzed?
+                            </button>
+                        </h2>
+                        <div id="general3" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+                            <div class="accordion-body">
+                                FraudGuard currently supports:
+                                <ul>
+                                    <li><strong>Email content:</strong> Phishing detection, spam identification</li>
+                                    <li><strong>SMS messages:</strong> Smishing (SMS phishing) detection</li>
+                                    <li><strong>Phone numbers:</strong> Scam caller identification</li>
+                                    <li><strong>Transactions:</strong> Payment fraud analysis</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Features & Capabilities</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="featuresAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#features1">
+                                What security features are included?
+                            </button>
+                        </h2>
+                        <div id="features1" class="accordion-collapse collapse show"
+                            data-bs-parent="#featuresAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li><strong>Two-Factor Authentication (2FA):</strong> Google Authenticator
+                                        integration</li>
+                                    <li><strong>Face Recognition:</strong> Biometric verification for high-value
+                                        transactions</li>
+                                    <li><strong>API Tokenization:</strong> Secure API authentication</li>
+                                    <li><strong>Encrypted Storage:</strong> All sensitive data is encrypted</li>
+                                    <li><strong>Transaction Holds:</strong> Suspicious transactions held for review</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#features2">
+                                How accurate is the fraud detection?
+                            </button>
+                        </h2>
+                        <div id="features2" class="accordion-collapse collapse" data-bs-parent="#featuresAccordion">
+                            <div class="accordion-body">
+                                Our AI-powered system achieves over 95% accuracy in fraud detection. The system
+                                continuously learns from
+                                new patterns and is updated regularly. False positive rates are typically below 2%,
+                                ensuring legitimate
+                                transactions aren't unnecessarily blocked.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#features3">
+                                Can I customize fraud detection rules?
+                            </button>
+                        </h2>
+                        <div id="features3" class="accordion-collapse collapse" data-bs-parent="#featuresAccordion">
+                            <div class="accordion-body">
+                                Yes! Pro and Enterprise plans allow you to:
+                                <ul>
+                                    <li>Set custom fraud score thresholds</li>
+                                    <li>Define transaction amount limits</li>
+                                    <li>Create whitelists/blacklists</li>
+                                    <li>Configure automated response actions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">Pricing & Plans</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="pricingAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#pricing1">
+                                What pricing plans are available?
+                            </button>
+                        </h2>
+                        <div id="pricing1" class="accordion-collapse collapse show" data-bs-parent="#pricingAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Free</h5>
+                                                <p class="display-6">₹0<small>/mo</small></p>
+                                                <ul class="list-unstyled small">
+                                                    <li>✓ 100 requests/day</li>
+                                                    <li>✓ Basic fraud detection</li>
+                                                    <li>✓ Email support (48h)</li>
+                                                    <li>✓ 1 user account</li>
+                                                    <li>✓ Community access</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card border-info">
+                                            <div class="card-body">
+                                                <h5>Starter</h5>
+                                                <p class="display-6">₹399<small>/mo</small></p>
+                                                <ul class="list-unstyled small">
+                                                    <li>✓ 5,000 requests/day</li>
+                                                    <li>✓ Advanced fraud detection</li>
+                                                    <li>✓ Email support (24h)</li>
+                                                    <li>✓ 5 user accounts</li>
+                                                    <li>✓ Basic analytics</li>
+                                                    <li>✓ API access</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <h5>Pro</h5>
+                                                <p class="display-6">₹1,999<small>/mo</small></p>
+                                                <ul class="list-unstyled small">
+                                                    <li>✓ 50,000 requests/day</li>
+                                                    <li>✓ AI-powered detection</li>
+                                                    <li>✓ Priority support (4h)</li>
+                                                    <li>✓ 25 user accounts</li>
+                                                    <li>✓ Advanced analytics</li>
+                                                    <li>✓ Custom rules</li>
+                                                    <li>✓ Webhook integration</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card border-warning">
+                                            <div class="card-body">
+                                                <h5>Enterprise</h5>
+                                                <p class="display-6">₹4,999<small>/mo</small></p>
+                                                <ul class="list-unstyled small">
+                                                    <li>✓ Unlimited requests</li>
+                                                    <li>✓ Custom AI models</li>
+                                                    <li>✓ 24/7 dedicated support</li>
+                                                    <li>✓ Unlimited users</li>
+                                                    <li>✓ Real-time monitoring</li>
+                                                    <li>✓ Custom integration</li>
+                                                    <li>✓ SLA guarantee (99.9%)</li>
+                                                    <li>✓ Compliance tools</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#pricing2">
+                                Is there a free trial?
+                            </button>
+                        </h2>
+                        <div id="pricing2" class="accordion-collapse collapse" data-bs-parent="#pricingAccordion">
+                            <div class="accordion-body">
+                                Yes! All new accounts start with our Free tier, which includes 100 API requests per
+                                day. You can upgrade to Starter (₹399/mo), Pro (₹1,999/mo), or Enterprise (₹4,999/mo) at any time. 
+                                All paid plans include a 14-day money-back guarantee.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Support & Troubleshooting</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="supportAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#support1">
+                                How do I get support?
+                            </button>
+                        </h2>
+                        <div id="support1" class="accordion-collapse collapse show" data-bs-parent="#supportAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li><strong>Email:</strong> <a href="{{ url_for('contact') }}">Contact form</a> -
+                                        Response within 24 hours</li>
+                                    <li><strong>Documentation:</strong> Check our <a
+                                            href="{{ url_for('user_guide') }}">User Guide</a></li>
+                                    <li><strong>API Reference:</strong> See <a href="{{ url_for('api_docs') }}">API
+                                            Documentation</a></li>
+                                    <li><strong>Pro/Enterprise:</strong> Priority support with 4-hour response time</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#support2">
+                                What if I encounter an error?
+                            </button>
+                        </h2>
+                        <div id="support2" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                            <div class="accordion-body">
+                                If you encounter an error:
+                                <ol>
+                                    <li>Check the <a href="{{ url_for('api_docs') }}#error-handling">error handling
+                                            documentation</a></li>
+                                    <li>Verify your API token is valid and not expired</li>
+                                    <li>Check rate limits on your account</li>
+                                    <li>Review request format and required parameters</li>
+                                    <li>Contact support if the issue persists</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#support3">
+                                Is my data secure?
+                            </button>
+                        </h2>
+                        <div id="support3" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                            <div class="accordion-body">
+                                Absolutely. We take security seriously:
+                                <ul>
+                                    <li>All data is encrypted in transit (TLS 1.3) and at rest (AES-256)</li>
+                                    <li>No data is stored longer than necessary for analysis</li>
+                                    <li>GDPR and CCPA compliant</li>
+                                    <li>Regular security audits and penetration testing</li>
+                                    <li>SOC 2 Type II certified (Enterprise tier)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Fraud Detection -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security & Fraud Detection</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="securityAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security1">
+                                How does FraudGuard protect my transaction data?
+                            </button>
+                        </h2>
+                        <div id="security1" class="accordion-collapse collapse show"
+                            data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>FraudGuard employs multiple layers of security to protect your data:</p>
+                                <ul>
+                                    <li><strong>End-to-End Encryption:</strong> All data transmitted to our API uses TLS
+                                        1.3 encryption, ensuring that transaction details cannot be intercepted during
+                                        transmission.</li>
+                                    <li><strong>Database Encryption:</strong> All stored data is encrypted at rest using
+                                        AES-256 encryption, the same standard used by banks and government institutions.
+                                    </li>
+                                    <li><strong>Tokenization:</strong> Sensitive payment information is tokenized, so
+                                        actual card numbers and account details are never stored directly.</li>
+                                    <li><strong>Zero-Knowledge Architecture:</strong> Our fraud detection analysis is
+                                        performed without permanently storing transaction content after analysis is
+                                        complete.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security2">
+                                What fraud detection techniques does the API use?
+                            </button>
+                        </h2>
+                        <div id="security2" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>Our API combines AI and traditional methods for comprehensive fraud detection:</p>
+                                <ul>
+                                    <li><strong>AI-Powered Analysis:</strong> Uses Google's Gemini API to analyze email,
+                                        SMS, and phone communications for phishing attempts, social engineering, and
+                                        suspicious patterns.</li>
+                                    <li><strong>Behavioral Analytics:</strong> Monitors transaction patterns to identify
+                                        unusual activity like sudden large transfers or rapid transaction sequences.
+                                    </li>
+                                    <li><strong>Keyword & Pattern Matching:</strong> Identifies known fraud indicators
+                                        such as "urgent," "verify account," "suspended," and suspicious URLs.</li>
+                                    <li><strong>Real-Time Risk Scoring:</strong> Every transaction receives an instant
+                                        fraud score (0-1) indicating the likelihood of fraudulent activity.</li>
+                                    <li><strong>Machine Learning Fallback:</strong> If AI services are unavailable,
+                                        rule-based detection ensures continuous protection.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security3">
+                                How do you handle user privacy and data retention?
+                            </button>
+                        </h2>
+                        <div id="security3" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>We prioritize user privacy with strict data handling policies:</p>
+                                <ul>
+                                    <li><strong>Minimal Data Collection:</strong> We only collect data necessary for
+                                        fraud analysis - transaction metadata, amounts, and content for analysis.</li>
+                                    <li><strong>Short Retention Period:</strong> Transaction content is deleted within
+                                        30 days after analysis. Only anonymized fraud patterns are retained for
+                                        improving detection.</li>
+                                    <li><strong>GDPR Compliant:</strong> Full right to access, modify, and delete your
+                                        personal data at any time.</li>
+                                    <li><strong>No Third-Party Sharing:</strong> Your data is never sold or shared with
+                                        third parties, except as required by law.</li>
+                                    <li><strong>Audit Logs:</strong> Complete transparency with access logs showing when
+                                        and how your data was accessed.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security4">
+                                What compliance standards does FraudGuard meet?
+                            </button>
+                        </h2>
+                        <div id="security4" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>FraudGuard is designed to meet industry-leading security and compliance standards:
+                                </p>
+                                <ul>
+                                    <li><strong>PCI DSS Compliance:</strong> Adheres to Payment Card Industry Data
+                                        Security Standards for handling payment information.</li>
+                                    <li><strong>SOC 2 Type II:</strong> Independently audited for security,
+                                        availability, and confidentiality controls (Enterprise tier).</li>
+                                    <li><strong>GDPR Compliant:</strong> Full compliance with European Union data
+                                        protection regulations.</li>
+                                    <li><strong>CCPA Compliant:</strong> Meets California Consumer Privacy Act
+                                        requirements for user data rights.</li>
+                                    <li><strong>ISO 27001:</strong> Information security management system certification
+                                        in progress.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security5">
+                                How does Two-Factor Authentication (2FA) enhance security?
+                            </button>
+                        </h2>
+                        <div id="security5" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>2FA adds an extra layer of protection to your FraudGuard account:</p>
+                                <ul>
+                                    <li><strong>TOTP Implementation:</strong> Uses Time-based One-Time Password (TOTP)
+                                        compatible with Google Authenticator, Authy, and other authenticator apps.</li>
+                                    <li><strong>Prevents Account Takeover:</strong> Even if your password is
+                                        compromised, attackers cannot access your account without the 6-digit code from
+                                        your device.</li>
+                                    <li><strong>No SMS Vulnerabilities:</strong> Unlike SMS-based 2FA, TOTP doesn't rely
+                                        on potentially insecure text messages.</li>
+                                    <li><strong>Easy Setup:</strong> Scan a QR code once, and your authenticator app
+                                        handles the rest automatically.</li>
+                                    <li><strong>Backup Codes:</strong> Recovery codes provided in case you lose access
+                                        to your authenticator device.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#security6">
+                                What happens when a transaction is flagged as fraudulent?
+                            </button>
+                        </h2>
+                        <div id="security6" class="accordion-collapse collapse" data-bs-parent="#securityAccordion">
+                            <div class="accordion-body">
+                                <p>Our fraud response system follows a careful review process:</p>
+                                <ul>
+                                    <li><strong>Automatic Hold:</strong> Transactions with fraud scores above 0.7 are
+                                        automatically held for review and won't complete immediately.</li>
+                                    <li><strong>User Notification:</strong> You're immediately notified via dashboard
+                                        and email when a transaction is flagged for review.</li>
+                                    <li><strong>Manual Review:</strong> You can review the fraud analysis details,
+                                        including the AI's reasoning and specific red flags identified.</li>
+                                    <li><strong>Two Options:</strong> Approve the transaction if you confirm it's
+                                        legitimate, or cancel it if you agree it's suspicious.</li>
+                                    <li><strong>Learning System:</strong> Your decisions help train the model to better
+                                        understand your legitimate transaction patterns.</li>
+                                    <li><strong>False Positive Protection:</strong> The system learns from approved
+                                        flagged transactions to reduce future false alarms.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Still have questions? -->
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h5>Still have questions?</h5>
+                <p class="text-muted">Can't find the answer you're looking for? Get in touch with our support team.</p>
+                <a href="{{ url_for('contact') }}" class="btn btn-primary">
+                    <i class="fas fa-envelope me-2"></i>Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

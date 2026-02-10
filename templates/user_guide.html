@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}User Guide - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-question-circle me-2"></i>User Guide</h1>
+        <p class="lead">Step-by-step instructions for using FraudGuard API</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Quick Navigation</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#setup">Setup & Configuration</a></li>
+                    <li><a href="#integration">Integration Guide</a></li>
+                    <li><a href="#testing">Testing & Validation</a></li>
+                    <li><a href="#production">Production Deployment</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <!-- Getting Started -->
+        <section id="getting-started" class="mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">1. Getting Started</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Step 1: Create an Account</h5>
+                    <ol>
+                        <li>Navigate to the <a href="{{ url_for('register') }}">registration page</a></li>
+                        <li>Fill in your username, email, and password</li>
+                        <li>Complete the registration process</li>
+                        <li>Verify your email address</li>
+                    </ol>
+
+                    <h5 class="mt-4">Step 2: Enable 2FA (Recommended)</h5>
+                    <ol>
+                        <li>Log in to your dashboard</li>
+                        <li>Click "Set up 2FA" in the security notification</li>
+                        <li>Scan the QR code with Google Authenticator</li>
+                        <li>Enter the 6-digit code to confirm</li>
+                    </ol>
+
+                    <h5 class="mt-4">Step 3: Generate API Token</h5>
+                    <ol>
+                        <li>Go to your <a href="{{ url_for('dashboard') }}">dashboard</a></li>
+                        <li>Navigate to API Settings</li>
+                        <li>Click "Generate New Token"</li>
+                        <li>Save the token securely (it won't be shown again)</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup & Configuration -->
+        <section id="setup" class="mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">2. Setup & Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Environment Setup</h5>
+                    <p>Install the required dependencies for your platform:</p>
+
+                    <h6>Python</h6>
+                    <pre><code>pip install requests</code></pre>
+
+                    <h6>Node.js</h6>
+                    <pre><code>npm install axios</code></pre>
+
+                    <h5 class="mt-4">Configuration</h5>
+                    <p>Store your API credentials securely:</p>
+                    <pre><code># .env file
+FRAUDGUARD_API_TOKEN=your_token_here
+FRAUDGUARD_API_URL=https://api.fraudguard.com</code></pre>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Security Note:</strong> Never commit your API token to version control!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integration Guide -->
+        <section id="integration" class="mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">3. Integration Guide</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Basic Integration</h5>
+                    <p>Follow these steps to integrate FraudGuard into your application:</p>
+
+                    <h6>Step 1: Initialize the Client</h6>
+                    <pre><code>from fraudguard import FraudGuardClient
+
+client = FraudGuardClient(api_token="your_token")</code></pre>
+
+                    <h6>Step 2: Perform Fraud Checks</h6>
+                    <pre><code># Check email for fraud
+result = client.check_email(email_content)
+
+if result.is_fraud:
+    print(f"Fraud detected! Score: {result.score}")
+    print(f"Reasons: {result.fraud_indicators}")
+else:
+    print("Email appears legitimate")</code></pre>
+
+                    <h6>Step 3: Handle Transactions</h6>
+                    <pre><code># Submit transaction for analysis
+transaction = client.submit_transaction(
+    sender_id="user123",
+    receiver_id="user456",
+    amount=150.00,
+    description="Payment"
+)
+
+if transaction.requires_review:
+    # Hold transaction for manual review
+    notify_admin(transaction.id)
+else:
+    # Process transaction
+    process_payment(transaction)</code></pre>
+
+                    <h5 class="mt-4">Advanced Integration</h5>
+                    <h6>Webhook Setup</h6>
+                    <p>Configure webhooks to receive real-time notifications:</p>
+                    <pre><code>POST /api/webhooks
+{
+    "url": "https://yourdomain.com/webhooks/fraudguard",
+    "events": ["fraud.detected", "transaction.flagged"]
+}</code></pre>
+
+                    <h6>Batch Processing</h6>
+                    <p>For high-volume scenarios, use batch endpoints:</p>
+                    <pre><code>POST /api/fraud-check/batch
+{
+    "items": [
+        {"data_type": "email", "content": "..."},
+        {"data_type": "sms", "content": "..."}
+    ]
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing -->
+        <section id="testing" class="mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">4. Testing & Validation</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Test Mode</h5>
+                    <p>Use test mode to validate your integration without affecting production data:</p>
+                    <pre><code>client = FraudGuardClient(
+    api_token="your_token",
+    test_mode=True
+)</code></pre>
+
+                    <h5 class="mt-4">Test Scenarios</h5>
+                    <p>Try these test cases:</p>
+                    <ul>
+                        <li><strong>Legitimate email:</strong> "Hello, this is a test message"</li>
+                        <li><strong>Phishing attempt:</strong> "Click here to verify your account immediately!"</li>
+                        <li><strong>Suspicious SMS:</strong> "You've won ₹1000! Call this number now!"</li>
+                    </ul>
+
+                    <h5 class="mt-4">Validation Checklist</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            API authentication working correctly
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Fraud detection returning expected results
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Error handling implemented
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Rate limiting handled gracefully
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Webhooks receiving notifications
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Deployment -->
+        <section id="production" class="mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">5. Production Deployment</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Pre-Deployment Checklist</h5>
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item">
+                            <i class="fas fa-square-check me-2"></i>
+                            API tokens stored securely in environment variables
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-square-check me-2"></i>
+                            Error handling and logging configured
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-square-check me-2"></i>
+                            Rate limiting implemented in your application
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-square-check me-2"></i>
+                            Monitoring and alerting set up
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-square-check me-2"></i>
+                            Backup fraud detection strategy in place
+                        </li>
+                    </ul>
+
+                    <h5>Monitoring</h5>
+                    <p>Monitor these key metrics:</p>
+                    <ul>
+                        <li>API response times</li>
+                        <li>Error rates</li>
+                        <li>Fraud detection accuracy</li>
+                        <li>False positive/negative rates</li>
+                        <li>API usage vs. quota</li>
+                    </ul>
+
+                    <h5 class="mt-4">Scaling Considerations</h5>
+                    <ul>
+                        <li>Implement caching for frequently analyzed patterns</li>
+                        <li>Use async/queue systems for non-blocking fraud checks</li>
+                        <li>Consider upgrading to higher tier for better rate limits</li>
+                        <li>Implement circuit breakers for API failures</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

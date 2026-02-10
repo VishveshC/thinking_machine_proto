@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secure Messages</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header>
+        <h1>Secure Messages</h1>
+        <input type="text" placeholder="Search messages..." />
+        <div class="profile-icon">👤</div>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <ul>
+                <li class="active">Inbox</li>
+                <li id="spam-tab">Spam & Fraud <span class="badge">3</span></li>
+                <li>Starred</li>
+                <li>Archived</li>
+                <li>Settings</li>
+            </ul>
+        </nav>
+
+        <main>
+            <section class="threads" id="thread-list">
+                <!-- Message threads will be injected here -->
+            </section>
+
+            <section class="conversation" id="conversation-view">
+                <div class="conversation-header">
+                    <h2 id="contact-name">Select a message</h2>
+                    <button id="report-btn">Report Spam</button>
+                </div>
+                <div class="messages" id="messages">
+                    <!-- Messages will appear here -->
+                </div>
+                <div class="reply-box">
+                    <input type="text" id="reply-input" placeholder="Type a message..." />
+                    <button id="send-btn">Send</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <button class="new-message-btn">＋</button>
+    <script src="script.js"></script>
+</body>
+
+</html>

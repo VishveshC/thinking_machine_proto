@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-3 fw-bold">
+        <i class="fas fa-shield-alt text-primary"></i> FraudGuard
+    </h1>
+    <p class="lead text-muted">AI-Powered Fraud Detection API for Secure Transactions</p>
+</div>
+
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5 text-center">
+                <h2 class="mb-4">Protect Your Business from Fraud</h2>
+                <p class="lead mb-4">
+                    FraudGuard uses advanced AI to detect suspicious emails, SMS messages, phone numbers,
+                    and transactions in real-time. Keep your users safe with our powerful API.
+                </p>
+                {% if not current_user.is_authenticated %}
+                <div>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-rocket me-2"></i>Get Started Free
+                    </a>
+                    <a href="{{ url_for('api_docs') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-book me-2"></i>View Documentation
+                    </a>
+                </div>
+                {% else %}
+                <div>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-chart-line me-2"></i>Go to Dashboard
+                    </a>
+                    <a href="{{ url_for('simulations') }}" class="btn btn-success btn-lg">
+                        <i class="fas fa-flask me-2"></i>Run Simulation
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="row mb-5">
+    <div class="col-12 text-center mb-4">
+        <h2>Key Features</h2>
+        <p class="text-muted">Everything you need to protect against fraud</p>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                <h5>AI-Powered Detection</h5>
+                <p class="text-muted">
+                    Leverage Google's Gemini AI to identify fraud patterns with over 95% accuracy
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-lock fa-3x text-success mb-3"></i>
+                <h5>2FA Security</h5>
+                <p class="text-muted">
+                    Two-factor authentication with Google Authenticator for enhanced account protection
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-exchange-alt fa-3x text-info mb-3"></i>
+                <h5>Transaction Monitoring</h5>
+                <p class="text-muted">
+                    Real-time fraud checks on all transactions with automated hold for suspicious activities
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Types -->
+<div class="row mb-5">
+    <div class="col-12 text-center mb-4">
+        <h2>Analyze Multiple Data Types</h2>
+        <p class="text-muted">Comprehensive fraud detection across channels</p>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-envelope fa-2x text-danger mb-3"></i>
+                <h6>Email</h6>
+                <p class="small text-muted">Phishing & spam detection</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-sms fa-2x text-warning mb-3"></i>
+                <h6>SMS</h6>
+                <p class="small text-muted">Smishing identification</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-phone fa-2x text-success mb-3"></i>
+                <h6>Phone</h6>
+                <p class="small text-muted">Scam caller detection</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-money-bill-wave fa-2x text-primary mb-3"></i>
+                <h6>Transactions</h6>
+                <p class="small text-muted">Payment fraud analysis</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <h2 class="display-4">95%</h2>
+                        <p class="mb-0">Accuracy Rate</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h2 class="display-4">&lt;2%</h2>
+                        <p class="mb-0">False Positives</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h2 class="display-4">24/7</h2>
+                        <p class="mb-0">Support Available</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h2 class="display-4">API</h2>
+                        <p class="mb-0">RESTful Integration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <div class="card border-0 bg-light">
+            <div class="card-body p-5">
+                <h3 class="mb-3">Ready to Get Started?</h3>
+                <p class="lead text-muted mb-4">
+                    Join thousands of developers protecting their applications with FraudGuard
+                </p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Create Free Account
+                </a>
+                {% else %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-chart-line me-2"></i>Go to Dashboard
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

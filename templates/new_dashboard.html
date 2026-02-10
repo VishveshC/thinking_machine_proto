@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4 fade-in">
+    <div class="col-12">
+        <h1>Welcome, {{ current_user.username }}!</h1>
+        <p class="text-muted">Your personalized fraud detection dashboard</p>
+    </div>
+</div>
+
+<!-- Quick Actions - Moved to Top -->
+<div class="row mb-4 fade-in">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#sendMoneyModal">
+                            <i class="fas fa-paper-plane me-2"></i>Send Money
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('financial_advisor') }}" class="btn btn-success w-100">
+                            <i class="fas fa-robot me-2"></i>AI Advisor
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('simulations') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-flask me-2"></i>Run Simulation
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="{{ url_for('api_docs') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-book me-2"></i>API Docs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Balance and Stats -->
+<div class="row mb-4 fade-in">
+    <div class="col-md-4 mb-3">
+        <div class="card stat-card" style="background: #2563eb;">
+            <div class="stat-value balance-display">₹{{ "%.2f"|format(current_user.balance) }}</div>
+            <div class="stat-label" style="color: rgba(255,255,255,0.8);">Available Balance</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+            <div class="stat-value">{{ recent_count }}</div>
+            <div class="stat-label">Recent Transactions</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card stat-card">
+            <div class="stat-value"
+                style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                {{ flagged_count }}</div>
+            <div class="stat-label">Flagged Activities</div>
+        </div>
+    </div>
+</div>
+
+<!-- Balance Graph with Projection -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-area me-2"></i>Balance Forecast
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Credit Score and Investment Tracker -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-star me-2"></i>Credit Score
+            </div>
+            <div class="card-body text-center">
+                {% if credit_score %}
+                <div class="credit-score-circle {{ credit_rating }}">
+                    {{ credit_score }}
+                </div>
+                <h5 class="mt-3">{{ credit_rating|title }} Credit</h5>
+                {% if credit_tips %}
+                <div class="alert alert-info mt-3 text-start">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Tips to Improve:</h6>
+                    <ul class="mb-0 small">
+                        {% for tip in credit_tips %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% else %}
+                <p class="text-muted">Credit score unavailable</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-2"></i>Investment Portfolio
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="investmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2FA Setup -->
+{% if not current_user.two_fa_enabled %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Security Recommendation:</strong> Enable Two-Factor Authentication for enhanced security.
+            <a href="{{ url_for('setup_2fa') }}" class="alert-link ms-2">Set up now</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Financial Insights -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-line me-2"></i>Financial Insights
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-up text-success me-2"></i>
+                        Total Received: <strong>₹{{ "%.2f"|format(total_received) }}</strong>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-down text-danger me-2"></i>
+                        Total Sent: <strong>₹{{ "%.2f"|format(total_sent) }}</strong>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-exchange-alt text-info me-2"></i>
+                        Transaction Count: <strong>{{ transaction_count }}</strong>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-shield-alt text-primary me-2"></i>
+                        Fraud Checks Passed: <strong>{{ safe_transactions }}</strong>
+                    </li>
+                </ul>
+                {% if ai_insight %}
+                <div class="alert alert-info mt-3 mb-0 small">
+                    <i class="fas fa-lightbulb me-2"></i>{{ ai_insight }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history me-2"></i>Recent Transactions
+            </div>
+            <div class="card-body p-0">
+                {% if recent_transactions %}
+                <div class="list-group list-group-flush">
+                    {% for txn in recent_transactions %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if txn.sender_id == current_user.id %}
+                                <i class="fas fa-arrow-right text-danger me-2"></i>
+                                <span>To: {{ txn.receiver.username }}</span>
+                                {% else %}
+                                <i class="fas fa-arrow-left text-success me-2"></i>
+                                <span>From: {{ txn.sender.username }}</span>
+                                {% endif %}
+                                <div class="small text-muted">{{ txn.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-bold">₹{{ "%.2f"|format(txn.amount) }}</div>
+                                <span
+                                    class="badge bg-{{ 'success' if txn.status == 'completed' else 'warning' if txn.status == 'pending' else 'danger' }}">
+                                    {{ txn.status }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3">No recent transactions</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flagged Activities -->
+{% if flagged_transactions %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-exclamation-circle me-2"></i>Flagged Activities Requiring Review
+            </div>
+            <div class="card-body">
+                {% for txn in flagged_transactions %}
+                <div class="alert alert-warning">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>Transaction #{{ txn.id }}</strong>
+                            <p class="mb-0">Amount: ₹{{ "%.2f"|format(txn.amount) }} | Fraud Score: {{
+                                "%.2f"|format(txn.fraud_score * 100) }}%</p>
+                            <small class="text-muted">{{ txn.fraud_reason }}</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-success"
+                                onclick="approveTransaction({{ txn.id }})">Approve</button>
+                            <button class="btn btn-sm btn-danger"
+                                onclick="cancelTransaction({{ txn.id }})">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Send Money Modal -->
+<div class="modal fade" id="sendMoneyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-paper-plane me-2"></i>Send Money</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('send_money') }}" id="sendMoneyForm">
+                {{ transaction_form.hidden_tag() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        {{ transaction_form.recipient_username.label(class='form-label') }}
+                        {{ transaction_form.recipient_username }}
+                    </div>
+                    <div class="mb-3">
+                        {{ transaction_form.amount.label(class='form-label') }}
+                        {{ transaction_form.amount }}
+                        <div class="form-text">Available balance: ₹{{ "%.2f"|format(current_user.balance) }}</div>
+                    </div>
+                    <div class="mb-3">
+                        {{ transaction_form.description.label(class='form-label') }}
+                        {{ transaction_form.description }}
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ transaction_form.face_verification }}
+                            <label class="form-check-label" for="{{ transaction_form.face_verification.id }}">
+                                {{ transaction_form.face_verification.label.text }}
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="faceVerificationButton"
+                            onclick="showFaceRecognition()">
+                            <i class="fas fa-camera me-2"></i>Verify Face
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    {{ transaction_form.submit }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Face Recognition Modal -->
+<div class="modal fade" id="faceRecognitionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-camera me-2"></i>Face Verification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <video id="webcam" autoplay playsinline></video>
+                <canvas id="faceCanvas"></canvas>
+                <div id="faceVerificationStatus" class="text-muted mt-2">Initializing camera...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Initialize balance chart
+    if (document.getElementById('balanceChart')) {
+        createBalanceChart('balanceChart', {
+            current: {{ current_user.balance }}
+        });
+    }
+
+    // Initialize investment chart
+    if (document.getElementById('investmentChart')) {
+        createInvestmentChart('investmentChart');
+    }
+
+    function approveTransaction(txnId) {
+        if (confirm('Approve this transaction?')) {
+            fetch(`/transaction/${txnId}/approve`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                });
+        }
+    }
+
+    function cancelTransaction(txnId) {
+        if (confirm('Cancel this transaction?')) {
+            fetch(`/transaction/${txnId}/cancel`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                });
+        }
+    }
+</script>
+{% endblock %}

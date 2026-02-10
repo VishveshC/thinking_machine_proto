@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% block title %}API Documentation - FraudGuard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-book me-2"></i>API Documentation</h1>
+        <p class="lead">Complete guide to integrating FraudGuard's fraud detection API</p>
+    </div>
+</div>
+
+<!-- Authentication Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="fas fa-key me-2"></i>Authentication</h3>
+    </div>
+    <div class="card-body">
+        <p>All API requests require authentication using an API token.</p>
+
+        <h5>Obtaining an API Token</h5>
+        <pre><code>POST /api/auth/token
+Content-Type: application/json
+
+{
+    "username": "your_username",
+    "password": "your_password"
+}</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expires_at": "2025-11-02T12:00:00Z"
+}</code></pre>
+
+        <h5>Using the Token</h5>
+        <p>Include the token in the <code>Authorization</code> header:</p>
+        <pre><code>Authorization: Bearer your_token_here</code></pre>
+    </div>
+</div>
+
+<!-- Endpoints Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="fas fa-plug me-2"></i>API Endpoints</h3>
+    </div>
+    <div class="card-body">
+
+        <!-- Fraud Check Endpoint -->
+        <h4 class="mt-3">1. Fraud Detection Check</h4>
+        <p>Analyze content for fraud indicators</p>
+
+        <pre><code>POST /api/fraud-check
+Authorization: Bearer your_token
+Content-Type: application/json
+
+{
+    "data_type": "email|sms|phone",
+    "content": "Your content to analyze",
+    "metadata": {
+        "sender": "optional_sender_info",
+        "receiver": "optional_receiver_info"
+    }
+}</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "status": "success",
+    "result": {
+        "is_fraud": false,
+        "confidence_score": 0.15,
+        "fraud_indicators": [],
+        "explanation": "Content appears legitimate",
+        "severity": "low"
+    },
+    "request_id": "req_123456"
+}</code></pre>
+
+        <hr class="my-4">
+
+        <!-- Transaction Submit -->
+        <h4 class="mt-3">2. Submit Transaction</h4>
+        <p>Submit a transaction for fraud analysis</p>
+
+        <pre><code>POST /api/transactions/submit
+Authorization: Bearer your_token
+Content-Type: application/json
+
+{
+    "sender_id": "user123",
+    "receiver_id": "user456",
+    "amount": 150.00,
+    "description": "Payment for services"
+}</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "status": "success",
+    "transaction_id": "txn_789",
+    "fraud_check": {
+        "requires_review": false,
+        "fraud_score": 0.12,
+        "status": "approved"
+    }
+}</code></pre>
+
+        <hr class="my-4">
+
+        <!-- Get Results -->
+        <h4 class="mt-3">3. Get Fraud Detection Results</h4>
+        <p>Retrieve results of a previous fraud check</p>
+
+        <pre><code>GET /api/fraud-check/{request_id}
+Authorization: Bearer your_token</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "status": "success",
+    "result": {
+        "request_id": "req_123456",
+        "timestamp": "2025-11-02T10:30:00Z",
+        "data_type": "email",
+        "is_fraud": true,
+        "confidence_score": 0.89,
+        "fraud_indicators": [
+            "Suspicious link detected",
+            "Urgency language present",
+            "Impersonation attempt"
+        ]
+    }
+}</code></pre>
+
+        <hr class="my-4">
+
+        <!-- Tokenization -->
+        <h4 class="mt-3">4. Data Tokenization</h4>
+        <p>Tokenize sensitive data for secure storage</p>
+
+        <pre><code>POST /api/tokenize
+Authorization: Bearer your_token
+Content-Type: application/json
+
+{
+    "data": "sensitive_information",
+    "type": "email|phone|custom"
+}</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "status": "success",
+    "token": "tok_abc123def456",
+    "expires_at": "2025-11-09T10:30:00Z"
+}</code></pre>
+
+        <hr class="my-4">
+
+        <!-- AI Financial Advisor Chatbot -->
+        <h4 class="mt-3">5. AI Financial Advisor Chatbot</h4>
+        <p>Get personalized financial advice powered by AI. Accessible from the dashboard or via API.</p>
+
+        <pre><code>POST /api/chat
+Authorization: Required (User must be logged in)
+Content-Type: application/json
+
+{
+    "message": "How can I improve my credit score?",
+    "history": [
+        {
+            "role": "user",
+            "content": "Previous user message"
+        },
+        {
+            "role": "assistant",
+            "content": "Previous bot response"
+        }
+    ]
+}</code></pre>
+
+        <h5>Response</h5>
+        <pre><code>{
+    "success": true,
+    "response": "Improving your credit score takes time but is achievable! Here's how: 1. Pay Bills On Time: Payment history is the most important factor (35% of your score). 2. Keep Credit Utilization Low: Use less than 30% of your available credit...",
+    "youtube_video": {
+        "title": "How to Build Credit Score - Expert Tips",
+        "url": "https://www.youtube.com/watch?v=YBCT3HA4WTA",
+        "thumbnail": "https://i.ytimg.com/vi/YBCT3HA4WTA/maxresdefault.jpg"
+    }
+}</code></pre>
+
+        <div class="alert alert-info mt-3">
+            <strong><i class="fas fa-info-circle me-2"></i>Features:</strong>
+            <ul class="mb-0 mt-2">
+                <li><strong>Context-Aware:</strong> Takes into account user's balance, transaction history, and spending
+                    patterns</li>
+                <li><strong>Voice-Enabled:</strong> Supports speech-to-text input and text-to-speech output</li>
+                <li><strong>YouTube Integration:</strong> Recommends relevant financial education videos</li>
+                <li><strong>Privacy-Focused:</strong> Does not store conversation history or sensitive financial data
+                </li>
+                <li><strong>Real-Time:</strong> Powered by Gemini AI for instant, personalized responses</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-warning mt-3">
+            <strong><i class="fas fa-exclamation-triangle me-2"></i>Limitations & Disclaimers:</strong>
+            <ul class="mb-0 mt-2">
+                <li>The AI provides <strong>general financial information only</strong>, not personalized investment
+                    advice</li>
+                <li>Users should always consult certified financial advisors for major financial decisions</li>
+                <li>The chatbot cannot guarantee investment returns or financial outcomes</li>
+                <li>Advice is based on general financial principles and may not suit individual circumstances</li>
+                <li>Not a substitute for professional tax, legal, or accounting advice</li>
+            </ul>
+        </div>
+
+        <h5 class="mt-3">Topics the Chatbot Can Help With:</h5>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <ul>
+                    <li><i class="fas fa-check text-success me-2"></i>Budgeting strategies</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Saving tips and emergency funds</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Credit score improvement</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Debt management strategies</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    <li><i class="fas fa-check text-success me-2"></i>Basic investment principles</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Retirement planning basics</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Financial goal setting</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Spending pattern analysis</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Handling -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Error Handling</h3>
+    </div>
+    <div class="card-body">
+        <p>The API uses standard HTTP status codes:</p>
+
+        <ul>
+            <li><strong>200 OK</strong> - Request succeeded</li>
+            <li><strong>400 Bad Request</strong> - Invalid parameters</li>
+            <li><strong>401 Unauthorized</strong> - Invalid or missing token</li>
+            <li><strong>429 Too Many Requests</strong> - Rate limit exceeded</li>
+            <li><strong>500 Internal Server Error</strong> - Server error</li>
+        </ul>
+
+        <h5>Error Response Format</h5>
+        <pre><code>{
+    "status": "error",
+    "error": {
+        "code": "INVALID_TOKEN",
+        "message": "The provided API token is invalid or expired"
+    }
+}</code></pre>
+    </div>
+</div>
+
+<!-- Usage Guidelines -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="fas fa-list-check me-2"></i>Usage Guidelines</h3>
+    </div>
+    <div class="card-body">
+        <h5>Rate Limits</h5>
+        <ul>
+            <li>Free tier: 100 requests/hour</li>
+            <li>Pro tier: 1,000 requests/hour</li>
+            <li>Enterprise: Unlimited</li>
+        </ul>
+
+        <h5>Best Practices</h5>
+        <ul>
+            <li>Always validate input data before sending to the API</li>
+            <li>Implement exponential backoff for retries</li>
+            <li>Store API tokens securely (never in client-side code)</li>
+            <li>Use webhooks for async processing of large batches</li>
+            <li>Monitor your fraud score thresholds and adjust as needed</li>
+        </ul>
+
+        <h5>Data Types Supported</h5>
+        <ul>
+            <li><strong>Email</strong> - Full email content including headers</li>
+            <li><strong>SMS</strong> - Text message content</li>
+            <li><strong>Phone</strong> - Phone numbers with optional context</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Code Examples -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="fas fa-code me-2"></i>Code Examples</h3>
+    </div>
+    <div class="card-body">
+        <h5>Python</h5>
+        <pre><code>import requests
+
+API_URL = "https://api.fraudguard.com"
+API_TOKEN = "your_token_here"
+
+headers = {
+    "Authorization": f"Bearer {API_TOKEN}",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "data_type": "email",
+    "content": "Your email content here"
+}
+
+response = requests.post(
+    f"{API_URL}/api/fraud-check",
+    headers=headers,
+    json=data
+)
+
+result = response.json()
+print(f"Fraud detected: {result['result']['is_fraud']}")
+print(f"Score: {result['result']['confidence_score']}")</code></pre>
+
+        <h5 class="mt-4">JavaScript</h5>
+        <pre><code>const API_URL = 'https://api.fraudguard.com';
+const API_TOKEN = 'your_token_here';
+
+async function checkForFraud(content, dataType) {
+    const response = await fetch(`${API_URL}/api/fraud-check`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${API_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            data_type: dataType,
+            content: content
+        })
+    });
+    
+    const result = await response.json();
+    console.log('Fraud detected:', result.result.is_fraud);
+    console.log('Score:', result.result.confidence_score);
+    return result;
+}</code></pre>
+    </div>
+</div>
+
+{% endblock %}
