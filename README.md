@@ -1,5 +1,6 @@
 # FraudGuard - AI-Powered Fraud Detection System
 https://proto.vishvesh.dns.army/
+
 A comprehensive fraud detection platform with user authentication, transaction monitoring, and AI-powered analysis using Google's Gemini API.
 
 ## ✨ Features
@@ -315,4 +316,5 @@ This is a demonstration project for educational purposes.
 ---
 
 **Demo System**: This is a demonstration fraud detection system. Transaction amounts are dummy values and no real money is involved.
+
 
