@@ -61,7 +61,7 @@ A comprehensive fraud detection platform with user authentication, transaction m
 
 ```powershell
 # Clone or navigate to project directory
-cd "c:\Users\vishvesh\Downloads\Vishvesh\AADAPT (NMIMS)"
+cd "c:\Users\vishvesh\Downloads\Vishvesh\"
 
 # Create virtual environment
 python -m venv .venv
@@ -316,5 +316,6 @@ This is a demonstration project for educational purposes.
 ---
 
 **Demo System**: This is a demonstration fraud detection system. Transaction amounts are dummy values and no real money is involved.
+
 
 
